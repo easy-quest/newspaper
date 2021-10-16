@@ -1,11 +1,23 @@
-#!/usr/bin/env python
-
-# from urllib.request import urlopen 
-# html = urlopen('http://pythonscraping.com/pages/page1.html') 
-# print(html.read())
-
+from urllib.error import HTTPError
 from urllib.request import urlopen
+
 from bs4 import BeautifulSoup
-html = urlopen('http://www.pythonscrapin.com/pages/page1.html')
-bs = BeautifulSoup(html.read(), 'html.parser')
-print(bs.h1)
+
+
+def getTitle(url):
+    try:
+        html = urlopen(url)
+    except HTTPError as e:
+        return None
+    try:
+        bs = BeautifulSoup(html.read(),'html.parser')
+        title = bs.body.h1
+    except AttributeError as e:
+        return None
+    return title
+
+title = getTitle('http://www.pythonscraping.com/pages/page1.html')
+if title == None:
+    print('Название не может быть найдено')
+else:
+    print(title)
